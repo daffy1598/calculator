@@ -1,0 +1,70 @@
+
+Calculator1
+
+Calculator1View.mc                                             изглед
+import Toybox.Graphics;
+import Toybox.Lang;                                               разширения
+import Toybox.System;
+import Toybox.WatchUi;
+class Calculator1View extends WatchUi.WatchFace {                           клас 
+    function initialize() {                                                           
+        WatchFace.initialize();
+    }
+    // Load your resources here                                     Зареждене на ресурсите 
+    function onLayout(dc as Dc) as Void {                            задаване на Layout
+        setLayout(Rez.Layouts.WatchFace(dc));
+    }
+    // Called when this View is brought to the foreground. Restore       
+         // the state of this View and prepare it to be shown. This includes
+    // loading resources into memory.
+    function onShow() as Void {                                    функция за показване 
+    }
+    // Update the view                                                         Актуализиране на изгледа
+    function onUpdate(dc as Dc) as Void {
+        // Get and show the current time                    Получаване и показване на текущото време
+      //  var clockTime = System.getClockTime();
+     //   var timeString = Lang.format("$1$:$2$", [clockTime.hour, clockTime.min.format("%02d")]);
+        var view = View.findDrawableById("TimeLabel") as Text;
+        var er = 10;
+        var text = (er*Math.PI+6);                             Изчисление на мателатическо уравнение
+        view.setText("My number:" + text);                           Показване на текст 
+        // Call the parent onUpdate function to redraw the layout Извикване на функцията onUpdate да преначертае оформлението
+        View.onUpdate(dc);
+    }
+    // Called when this View is removed from the screen. Save the
+    // state of this View here. This includes freeing resources from memory
+   
+    function onHide() as Void {                                 функция за скриване 
+    }
+    // The user has just looked at their watch. Timers and animations may be started here. Потребителят току-що погледна часовника си. Таймери и анимации може да се стартират тук.
+    function onExitSleep() as Void {                               Функция за излизане и заспиване
+    }
+    // Terminate any active timers and prepare for slow updates. Прекратете всички активни таймери и се подгответе за бавни актуализации.
+    function onEnterSleep() as Void {
+    }
+}
+manifest.xml
+<!-- This is a generated file. --><iq:manifest xmlns:iq="http://www.garmin.com/xml/connectiq" version="3">
+    <iq:application entry="Calculator1App" id="93525a24636a4f14925b5ac2b3c10309" launcherIcon="@Drawables.LauncherIcon" minApiLevel="1.2.1" name="@Strings.AppName" type="watchface" version="0.0.0">
+        <iq:products>
+            <iq:product id="fenix6xpro"/>
+            <iq:product id="vivoactive"/>
+            <iq:product id="vivoactive3"/>
+            <iq:product id="vivoactive_hr"/>
+            <iq:product id="vivolife"/>
+        </iq:products>
+        <iq:permissions>
+            <iq:uses-permission id="Ant"/>
+            <iq:uses-permission id="Background"/>
+            <iq:uses-permission id="BluetoothLowEnergy"/>
+            <iq:uses-permission id="Communications"/>
+            <iq:uses-permission id="Positioning"/>
+            <iq:uses-permission id="PushNotification"/>
+            <iq:uses-permission id="Sensor"/>
+        </iq:permissions>
+        <iq:languages>
+            <iq:language>eng</iq:language>
+        </iq:languages>
+        <iq:barrels/>
+    </iq:application>
+</iq:manifest>
