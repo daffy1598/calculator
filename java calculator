@@ -1,0 +1,182 @@
+Source
+
+package JavaCalculators;                                                         пакет 
+                                                                                                  вмъкване на разширения
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;                                            
+
+public class JavaCalculators implements ActionListener{                         клас
+public JFrame frame;                                                                                 рамка 
+public	JTextField textfield;                                                                  текстово поле
+public	JButton[] numberButtons = new JButton[10];                       добавяне на нов бутон 10 
+public	JButton[] functionButtons = new JButton[9];                        добавяне на нов бутон 9 
+public JButton addButton,subButton,mulButton,divButton;  
+public JButton decButton, equButton, delButton, clrButton, negButton;		Добавяне на бутони за събиране, деление,изваждане, изтриване на число,умножение,отрицателни числа, десетични числа,изтриване на поле, равно
+public JPanel panel;                                                                               панел
+public	Font myFont = new Font("Ink Free",Font.BOLD,30);               фон (bold, размер 30)
+	double num1=0,num2=0,result=0;
+	char operator;                                                                      оператор на знак 
+	private JScrollPane scrollPane;                                          скролващи панели настрани 
+	private JScrollPane scrollPane_1;
+	private JScrollPane scrollPane_2;
+	JavaCalculators () {
+		frame = new JFrame("Calculator");                                          рамка 
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setSize(1128, 62);                                           размер на рамката
+		addButton = new JButton("+");                                   добавяне на бутон +
+		addButton.addActionListener(new ActionListener() {    действие на бутона 
+			public void actionPerformed(ActionEvent e) {               събиране
+			}
+                     });
+		subButton = new JButton("-");                   нов бутон за изваждане (-)
+		mulButton = new JButton("*");                  нов бутон за умножение (*)
+		divButton = new JButton("/");                    нов бутон за деление (/)
+	divButton.addActionListener(new ActionListener() { действие на бутона за деление
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		decButton = new JButton(".");                нов бутон за десетични числа (.)
+		equButton = new JButton("=");              нов бутон за равно (=)
+		equButton.addActionListener(new ActionListener() { действие на бутона равно
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		delButton = new JButton("Del");       нов бутон за изтриване на число (Del)
+		clrButton = new JButton("Clr");        нов бутон за изтриване на поле (Clr)
+		negButton = new JButton("(-)");        нов бутон за отрицателни числа (-)
+negButton.addActionListener(new ActionListener() {          действие на бутона за отрицателни 
+			public void actionPerformed(ActionEvent e) { числа
+			}
+		});
+		functionButtons[0] = addButton; функция за добавяне на бутона (0) събиране
+		functionButtons[1] = subButton; функция за добавяне на бутона (1) изваждане
+		functionButtons[2] = mulButton; функция за добавяне на бутона (2) умножение
+		functionButtons[3] = divButton;  функция за добавяне на бутона (3) деление
+		functionButtons[4] = decButton; функция за добавяне на бутона (4) десетични числа 
+		functionButtons[5] = equButton; функция за добавяне на бутона (5) равно 
+		functionButtons[6] = delButton;  функция за добавяне на бутона (6) изтриване на число 
+		functionButtons[7] = clrButton; функция за добавяне на бутона (7) изтриване на поле 
+		functionButtons[8] = negButton; функция за добавяне на бутона (8) отрицателни числа 
+		for(int i =0;i<9;i++) {                                 метод на функция за задаване на фон, 
+			functionButtons[i].addActionListener(this); фокусиране и списък на 
+			functionButtons[i].setFont(myFont);                   действие на бутоните
+			functionButtons[i].setFocusable(false);
+		}
+		for(int i =0;i<10;i++) {                                                                  метод(цикъл)
+			numberButtons[i] = new JButton(String.valueOf(i));       нов бутон за 
+			numberButtons[i].addActionListener(this);                      стойност
+			numberButtons[i].setFont(myFont);
+			numberButtons[i].setFocusable(false);
+		}
+		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(),BoxLayout.X_AXIS));                 	 задаване на рамка и изложение като кутия(един след друг)
+		textfield = new JTextField();       ново текстово поле
+		textfield.setFont(myFont);           задаване на фон на текстовото поле 
+		textfield.setEditable(false);          да се редактора 
+		frame.getContentPane().add(textfield);       
+		panel = new JPanel();
+		panel.add(numberButtons[1]); добавяне на бутон за числото едно 
+		panel.add(numberButtons[2]); добавяне на бутон за числото две
+		panel.add(numberButtons[3]); добавяне на бутон за числото три
+		panel.add(numberButtons[4]); добавяне на бутон за числото четири
+		panel.add(numberButtons[5]); добавяне на бутон за числото пет
+		panel.add(numberButtons[6]); добавяне на бутон за числото шест
+		panel.add(numberButtons[7]); добавяне на бутон за числото седем
+		panel.add(numberButtons[8]); добавяне на бутон за числото осем
+		panel.add(numberButtons[9]); добавяне на бутон за числото девет
+		panel.add(numberButtons[0]); добавяне на бутон за числото нула
+		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+		scrollPane_1 = new JScrollPane();
+		panel.add(scrollPane_1);
+		panel.add(mulButton);  добавяне на бутон за умножение
+		panel.add(decButton);  добавяне на бутон за десетични числа
+		panel.add(equButton);  добавяне на бутон за равно
+		panel.add(divButton); добавяне на бутон за деление
+		panel.add(addButton); добавяне на бутон за събиране
+		panel.add(subButton); добавяне на бутон за изваждане
+		frame.getContentPane().add(panel);                     рамка и скролващи панели
+		scrollPane = new JScrollPane();
+		frame.getContentPane().add(scrollPane);	
+		scrollPane_2 = new JScrollPane();
+		frame.getContentPane().add(scrollPane_2);
+		frame.getContentPane().add(negButton);
+		frame.getContentPane().add(delButton);
+		frame.getContentPane().add(clrButton);
+		frame.setVisible(true);
+	}	
+	public static void main(String[] args) {
+	JavaCalculators calc = new JavaCalculators () ;
+	}
+	@Override
+	public void actionPerformed(ActionEvent e) {              извеждане на стойност
+		for(int i=0;i<10;i++) {
+			if(e.getSource() == numberButtons[i]) {
+			textfield.setText(textfield.getText().concat(String.valueOf(i)));
+			}
+		}
+		if(e.getSource()==decButton) {             действие за изобразяване в тестово поле
+			textfield.setText(textfield.getText().concat("."));
+		}
+		if(e.getSource()==addButton) {             действие за изобразяване в тестово поле на оператора събиране
+			num1 = Double.parseDouble(textfield.getText());
+			operator ='+';                            
+			textfield.setText("");
+		}
+		if(e.getSource()==subButton) {            действие за изобразяване в тестово поле на оператора изваждане 
+			num1 = Double.parseDouble(textfield.getText());
+			operator ='-';
+			textfield.setText("");
+		}
+		if(e.getSource()==mulButton) {             действие за изобразяване в тестово поле на оператора умножение
+			num1 = Double.parseDouble(textfield.getText());
+			operator ='*';
+			textfield.setText("");
+		}
+		if(e.getSource()==divButton) {             действие за изобразяване в тестово поле на оператора деление
+			num1 = Double.parseDouble(textfield.getText());
+			operator ='/';
+			textfield.setText("");
+		}
+		if(e.getSource()==equButton) {    действие за изобразяване в тестово поле на оператора равно
+			num2=Double.parseDouble(textfield.getText());
+			switch(operator) {
+			case'+':
+				result=num1+num2;     събиране на две числа 
+				break;
+			case'-':
+				result=num1-num2;                  изваждане на две числа
+				break;
+			case'*':
+				result=num1*num2;                    умножение на две числа 
+				break;
+			case'/':
+				result=num1/num2;                  деление на две числа 
+				break;
+			}
+			textfield.setText(String.valueOf(result)); извеждане в тестовото поле на  
+			num1=result;                                                                  резултата   
+		}
+		if(e.getSource()==clrButton) {                               действие извеждане в тестовото поле за изтриване на полето   
+			textfield.setText("");
+		}
+		if(e.getSource()==delButton) {
+			String string = textfield.getText();
+			textfield.setText("");
+			for(int i=0;i<string.length()-1;i++) {
+				textfield.setText(textfield.getText()+string.charAt(i));
+			}
+		}
+		if(e.getSource()==negButton) {                                         действие извеждане в тестовото поле  за отрицателни числа    
+			double temp = Double.parseDouble(textfield.getText());
+			temp*=-1;
+			textfield.setText(String.valueOf(temp));
+		}
+	}
+}
