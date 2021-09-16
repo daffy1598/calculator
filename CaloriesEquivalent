@@ -1,0 +1,171 @@
+Source
+CaloriesEquivalent
+
+import Toybox.Application;
+import Toybox.Lang;                          
+import Toybox.WatchUi;                                        
+                                 	 В горната част има изявление, което е аналогично на C++, или импортиране в Java™, Ruby, или Python™. Toybox е главният модул за модулите на системата Monkey C; 
+class CaloriesEquivalentApp extends Application.AppBase {                базов клас
+    function initialize() {                                       
+	 задаване на инициализация на функция
+AppBase.initialize();	
+    }
+    // onStart() is called on application start up                          стартиране на заявлението 
+    function onStart(state) 
+ }
+    // onStop() is called when your application is exiting        когато приложението излиза от  
+    function onStop(state) {                                                                       функцията (спиране)
+    }
+    // Return the initial view of your application here        да се върне първоначалния изглед на 
+    function getInitialView() {                                                              приложението 
+        return [ new CaloriesEquivalentView() ];
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CaloriesEquivalentView.mc                                                     изглед 
+import Toybox.Graphics;
+import Toybox.Lang;                                                             разширения
+import Toybox.System;
+import Toybox.WatchUi;
+
+
+class CaloriesEquivalentView extends WatchUi.SimpleDataField {    	клас за разширение на  часовници и обикновено поле от данни
+	protected var calories = 0;                                                   въвеждане на калории
+	protected var text = 0;                                                          въвеждане на текст
+	function initialize() {
+		SimpleDataField.initialize();        изициализация на обикновено поле от данни
+		label = "Calories";                                                      етикет 
+	}
+	function compute(info) {                                                   
+	if (info has :calories && info.calories != null && info.calories > 0) {
+			if (self.calories != info.calories) {
+				self.calories = info.calories;
+				self.text = self.format(info.calories);
+			}
+			return self.text;                                   
+		}
+return "0";                                                                                       
+}
+	protected var equivalents = {                                        
+		// https://www.nutritionix.com/            сайт за грамажи на храни 
+
+		"1" => {                                                                    1 грам
+			"1" => "$1$ raspberry",                             1  малина
+			"+" => "$1$ raspberries",                           + (прибавяне) към 1 малина
+		},
+		"100" => {                                                               100 грама
+			"1" => "$1$ energy gel",                        1 енергийна напитка
+			"+" => "$1$ energy gels",           + (прибавяне) към 1 енергийни напитки
+		},
+		"120" => {                                                                 120 грама 
+			"1" => "$1$ cup of milk",                             1 чаша с мляко 
+			"+" => "$1$ cups of milk",                 + (прибавяне) към 1 чаши с мляко 
+		},
+		"161" => {                                                                161 грама 
+			"1" => "$1$ potato",                                1 картоф
+			"+" => "$1$ potatoes",                           + (прибавяне) към 1 картоф
+		},
+		"216" => {                                                                         216 грама
+			"1" => "$1$ chicken wing",                          1 пилешко крилце
+			"+" => "$1$ chicken wings",   + (прибавяне) към 1 пилешки крилца
+		},
+		"290" => {                                                                       290 грама
+			"1" => "$1$ pizza slice",                              1 парче пица
+			"+" => "$1$ pizza slices",      + (прибавяне) към 1 парчета с пица
+		},
+	};
+	function format(calories) {                                 функция за формат на калориите
+		var prev = 0;                                                          
+		for (var i = 1; i <= calories; i += 1) {
+			var value = Math.round(calories / i);        задаване на стойност 
+			if (value == prev) {
+// no point in looking up closest match if we've just checked it... 	няма смисъл да търсим най-близко съвпадение, ако просто сме го проверили
+				continue;                             
+			}
+			prev = value;                                         
+// find the closest match & the amount of it most closely matching 
+// the current amount of calories	намира най- близко съвпадение и   количеството от него , най- близко съвпадащо до калориите
+			var closest = self.getClosest(value);  да вземе стойност от най- близките
+			var amount = Math.round(calories / closest); изчисление на сумата             (калориите разделени на най- близките стойности)
+			var difference = calories - amount * closest;   разликата = калориите – изчисленията умножени по най- близките стойности 
+			if (calories * 0.02 > difference.abs()) {
+				// if we've found a match within 2% of what we're looking for, that's
+				// good enough! Ако сме намерили съвпадение в рамките на 2% от това, което търсим, това е достатъчно!
+				return self.pluralize(closest, amount); върни самостоятелно множествено число(сумата и най-близките стойности)
+			}
+		}
+		return "";                                                                         върни празно поле
+	}
+	function getClosest(calories) {                функция за взимане на най-близки стойности  (калориите)
+		var list = self.equivalents.keys();                                 
+		var prev = 0;                                                          предишна стойност = 0 
+                     var next = list[list.size() - 1].toNumber();    изчисление на следващия списък  
+		for (var i = 0; i < list.size(); i++) {
+			var current = list[i].toNumber();
+			if (current <= calories && current > prev) {
+				prev = current;
+			}
+			if (current >= calories && current < next) { 
+				next = current;        
+			}
+		}
+		return calories - prev < next - calories ? prev : next; 
+	}
+	function pluralize(calories, amount) {       
+		var stringAmount = amount.toString(); 
+		var stringCalories = calories.toString(); 
+		var plurals = self.equivalents[stringCalories];       
+		if (plurals.hasKey(stringAmount)) {
+			return Lang.format(plurals[stringAmount], [stringAmount]); 
+		}
+		if (plurals.hasKey("+")) {                             
+			return Lang.format(plurals["+"], [stringAmount]); 
+		}
+		throw new Lang.Exception(/* Missing plural */); 
+	}
+}
+manifest.xml
+<!-- This is a generated file.     (Това е генериран файл.)
+><iq:manifest xmlns:iq=http://www.garmin.com/xml/connectiq  version="3">   (версия) 
+    <iq:application entry="CaloriesEquivalentApp" id="a63630099c8943918bb8da42fce305b3" launcherIcon="@Drawables.LauncherIcon" minApiLevel="1.3.0" name="@Strings.AppName" (име) type="datafield" (тип)  version="1.0.0">  ( версия)
+        <iq:products>                                                          продукти за визуализация
+            <iq:product id="vivoactive"/>
+            <iq:product id="vivoactive3"/>
+            <iq:product id="vivoactive3d"/>
+            <iq:product id="vivoactive3m"/>
+            <iq:product id="vivoactive3mlte"/>
+            <iq:product id="vivoactive4"/>
+            <iq:product id="vivoactive_hr"/>
+        </iq:products>
+        <iq:permissions>                                                     разрешения на продуктите 
+            <iq:uses-permission id="Ant"/>
+            <iq:uses-permission id="Background"/>                             фон
+            <iq:uses-permission id="BluetoothLowEnergy"/>              Bluetooth ниска енергия
+            <iq:uses-permission id="Communications"/>                     комуникации
+            <iq:uses-permission id="DataFieldAlert"/>                        поле от данни
+            <iq:uses-permission id="FitContributor"/>                         фит сътрудник 
+            <iq:uses-permission id="Positioning"/>                              позициониране
+            <iq:uses-permission id="PushNotification"/>                     пускане на известия
+            <iq:uses-permission id="Sensor"/>                                     сензор 
+            <iq:uses-permission id="SensorHistory"/>                         история на сензора
+            <iq:uses-permission id="UserProfile"/>                              профил на потребителя 
+        </iq:permissions>
+        <iq:languages>                                                                         език 
+            <iq:language>eng</iq:language>
+        </iq:languages>
+        <iq:barrels/>
+    </iq:application>
